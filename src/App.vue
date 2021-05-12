@@ -1,17 +1,58 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div>
+      <div ref="selectType" class="current-type">{{ currentType }}</div>
+      <div class="switch-button" :class="{'stickyNav' : scrollToNav}" @click="selectType($event)">
+        <div v-for="(type, index) in types" :key="index" class="button">
+          <div>{{ type }}</div>
+        </div>
+      </div>
+    </div>
+    <TopTen />
+    <TotalNumber :currentType="currentType" />
+    <AllPet :currentType="currentType" />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import TopTen from './components/TopTen.vue'
+import TotalNumber from '@/components/TotalNumber.vue'
+import AllPet from '@/components/AllPet.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    TopTen,
+    TotalNumber,
+    AllPet
+  },
+  data() {
+    return {
+      currentType: 'DOG',
+      types: ['DOG', 'CAT', 'OTHER'],
+      scrollToNav: false
+    }
+  },
+  mounted() {
+    window.addEventListener('scroll', () => {
+      const height = this.$refs.selectType.offsetHeight
+      const {scrollTop} = document.documentElement
+      console.log(scrollTop)
+      console.log(height)
+      if (scrollTop > height) {
+        this.scrollToNav = true
+      } else {
+        this.scrollToNav = false
+      }
+    })
+  },
+  methods: {
+    selectType(e) {
+      this.currentType = e.target.innerText
+    },
+    scrollDown() {
+      console.dir(this.$refs.selectType)
+    }
   }
 }
 </script>
@@ -21,8 +62,33 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+}
+.current-type {
+  padding: 20px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.switch-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.stickyNav {
+  position: fixed;
+  top: 0;
+}
+.button {
+  width: 200px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.button:hover {
+  cursor: pointer;
 }
 </style>
