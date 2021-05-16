@@ -12,7 +12,7 @@
           <div class="pet-item-detail">Color: {{ pet.color }}</div>
         </div>
       </div>
-      <div ref="listElm" class="more-content" />
+      <div ref="listElm" class="more-content"></div>
     </div>
   </div>
 </template>
@@ -25,6 +25,7 @@ export default {
   data() {
     return {
       pets: [],
+      morePets: [],
       anchor: 10,
       loadMoreTag: 10
     }
@@ -39,15 +40,7 @@ export default {
   },
   mounted() {
     this.getPetList()
-    window.addEventListener('scroll', () => {
-      const { scrollHeight, scrollTop, clientHeight } = document.documentElement
-      console.log('scrollHeight', scrollHeight)
-      console.log('scrollTop', scrollTop)
-      console.log('clientHeight', clientHeight)
-      if (scrollTop + clientHeight >= scrollHeight - 10) {
-        setTimeout(this.loadMore, 1500)
-      }
-    })
+    window.addEventListener('scroll', this.scrollToLoad)
   },
   methods: {
     async getPetList() {
@@ -73,6 +66,12 @@ export default {
       console.log('from loadmore', resp.data)
       this.pets.push(...resp.data)
       this.loadMoreTag += 10
+    },
+    scrollToLoad() {
+      const { scrollTop, scrollHeight, clientHeight } = document.documentElement
+      if (scrollTop + clientHeight > scrollHeight - 10) {
+        this.loadMore()
+      }
     }
   }
 }
