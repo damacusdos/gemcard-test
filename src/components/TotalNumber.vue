@@ -1,11 +1,13 @@
 <template>
   <div>
-    <div
-      class="total-number-badge fade-in"
-      :style="[showBadge ? { opacity: '1' } : { opacity: '0' }]"
-    >
-      <div>There's {{ filteredNumber }} {{ currentType }} in total.</div>
-    </div>
+    <transition name="fade">
+      <div
+        v-if="showBadge"
+        class="total-number-badge"
+      >
+        <div>There's {{ filteredNumber }} {{ currentType }} in total.</div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -34,14 +36,12 @@ export default {
   watch: {
     currentType() {
       this.getAllPetsNumber()
-      setTimeout(() => (this.showBadge = true), 500)
-      setTimeout(() => (this.showBadge = false), 3500)
     }
   },
   mounted() {
     this.getAllPetsNumber()
-    setTimeout(() => (this.showBadge = true), 500)
-    setTimeout(() => (this.showBadge = false), 3500)
+    setTimeout(() => this.showBadge = true, 1000)
+    setTimeout(() => this.showBadge = false, 3000)
   },
   methods: {
     async getAllPetsNumber() {
@@ -72,5 +72,14 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
+}
+.fade-enter-active {
+  transform: scale(1.2);
+  transition: all 1s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.fade-leave-active {
+  transform: translateY(-50%);
+  transition: all 1s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  opacity: 1;
 }
 </style>

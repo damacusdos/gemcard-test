@@ -29,7 +29,7 @@ export default {
   data() {
     return {
       currentType: 'DOG',
-      types: ['DOG', 'CAT', 'OTHER'],
+      types: ['DOG', 'CAT', 'OTHER', 'BIRD'],
       scrollToNav: false
     }
   },
@@ -37,8 +37,6 @@ export default {
     window.addEventListener('scroll', () => {
       const height = this.$refs.selectType.offsetHeight
       const {scrollTop} = document.documentElement
-      console.log(scrollTop)
-      console.log(height)
       if (scrollTop > height) {
         this.scrollToNav = true
       } else {
@@ -49,6 +47,7 @@ export default {
   methods: {
     selectType(e) {
       this.currentType = e.target.innerText
+      console.log(this.currentType)
     },
     scrollDown() {
       console.dir(this.$refs.selectType)
