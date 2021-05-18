@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import api from '@/api/request'
 
 export default {
   props: ['currentType'],
@@ -44,24 +44,14 @@ export default {
   },
   methods: {
     async getPetList() {
-      const response = await axios.get(
-        `https://data.montgomerycountymd.gov/resource/e54u-qx42.json?animaltype=${this.currentType}&$limit=${this.anchor}`,
-        {
-          params: {
-            $$app_token: 'D8zSK3YQscRF9ZveYwmXagPhK'
-          }
-        }
-      )
+      const response = await api.getSome(this.currentType, this.anchor, 0)
       this.pets = response.data
     },
     async loadMore() {
-      const resp = await axios.get(
-        `https://data.montgomerycountymd.gov/resource/e54u-qx42.json?animaltype=${this.currentType}&$limit=${this.anchor}&$offset=${this.loadMoreTag}`,
-        {
-          params: {
-            $$app_token: 'D8zSK3YQscRF9ZveYwmXagPhK'
-          }
-        }
+      const resp = await api.getSome(
+        this.currentType,
+        this.anchor,
+        this.loadMoreTag
       )
       console.log('from loadmore', resp.data)
       this.pets.push(...resp.data)

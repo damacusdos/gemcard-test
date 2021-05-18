@@ -1,10 +1,7 @@
 <template>
   <div>
     <transition name="fade">
-      <div
-        v-if="showBadge"
-        class="total-number-badge"
-      >
+      <div v-if="showBadge" class="total-number-badge">
         <div>There's {{ filteredNumber }} {{ currentType }} in total.</div>
       </div>
     </transition>
@@ -12,7 +9,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import api from '@/api/request'
 
 export default {
   props: ['currentType'],
@@ -40,19 +37,12 @@ export default {
   },
   mounted() {
     this.getAllPetsNumber()
-    setTimeout(() => this.showBadge = true, 1000)
-    setTimeout(() => this.showBadge = false, 3000)
+    setTimeout(() => (this.showBadge = true), 1000)
+    setTimeout(() => (this.showBadge = false), 3000)
   },
   methods: {
     async getAllPetsNumber() {
-      const resp = await axios.get(
-        `https://data.montgomerycountymd.gov/resource/e54u-qx42.json?animaltype=${this.currentType}`,
-        {
-          params: {
-            $$app_token: 'D8zSK3YQscRF9ZveYwmXagPhK'
-          }
-        }
-      )
+      const resp = await api.getAll(this.currentType)
       this.pets = resp.data
     }
   }
@@ -75,11 +65,11 @@ export default {
 }
 .fade-enter-active {
   transform: scale(1.2);
-  transition: all 1s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  transition: all 1s cubic-bezier(1, 0.5, 0.8, 1);
 }
 .fade-leave-active {
   transform: translateY(-50%);
-  transition: all 1s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  transition: all 1s cubic-bezier(1, 0.5, 0.8, 1);
   opacity: 1;
 }
 </style>
